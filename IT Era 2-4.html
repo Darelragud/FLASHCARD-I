@@ -269,6 +269,31 @@
             padding: 10px;
             font-size: 16px;
         }
+
+        .flashcard-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 24px;
+        }
+
+        .nav-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--bg-color);
+            border-color: #d1d5db;
+        }
         
     </style>
 </head>
@@ -335,6 +360,10 @@
                         <button id="flip-btn">Flip Card</button>
                         <div id="answer-text" class="answer-text"></div>
                     </div>
+                </div>
+                <div class="flashcard-nav">
+                    <button class="nav-btn" id="prev-card">Previous</button>
+                    <button class="nav-btn" id="next-card">Next</button>
                 </div>
             </div>
         </div>
@@ -421,6 +450,8 @@
         const progressBar = document.getElementById('progress-bar');
         const answerPrompt = document.getElementById('answer-prompt');
         const answerCard = document.getElementById('answer-card');
+        const prevBtn = document.getElementById('prev-card');
+        const nextBtn = document.getElementById('next-card');
 
         let currentCategory = '';
         let currentCardIndex = 0;
@@ -518,6 +549,10 @@
                 navigateCards(-1);
             }
         }
+        
+        // Event Listeners for Nav Buttons
+        prevBtn.addEventListener('click', () => navigateCards(-1));
+        nextBtn.addEventListener('click', () => navigateCards(1));
 
         // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
