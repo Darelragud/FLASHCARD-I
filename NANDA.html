@@ -82,16 +82,7 @@
                     </div>
                     <img src="https://placehold.co/40x40/E2E8F0/4A5568?text=U" alt="User" class="rounded-full">
                 </header>
-                <!-- Back button: placed at the top or bottom of this topic page -->
-<button id="backButton" style="padding:10px 14px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">
-  Back to Topics
-</button>
-
-<script>
-  // Script for back button
-  document.getElementById('backButton').addEventListener('click', () => {
-    window.location.href = 'index.html'; // goes back to selector page
-  });
+                
 </script>
 
                 <main class="flex-grow space-y-4 overflow-y-auto custom-scrollbar pr-2">
@@ -116,6 +107,16 @@
 
 
             <!-- Screen 2: Flashcard View -->
+            <!-- Back button: placed at the top or bottom of this topic page -->
+<button id="backButton" style="padding:10px 14px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">
+  Back to Topics
+</button>
+
+<script>
+  // Script for back button
+  document.getElementById('backButton').addEventListener('click', () => {
+    window.location.href = 'index.html'; // goes back to selector page
+  });
             <div id="screen2" class="phone-screen w-full max-w-sm mx-auto bg-white rounded-3xl p-4 border border-gray-200 flex-col h-[700px] hidden">
                 <header class="flex justify-between items-center mb-4">
                     <i id="backButton" class="ph ph-arrow-left text-2xl cursor-pointer"></i>
@@ -456,3 +457,4 @@
 </body>
 
 </html>
+
