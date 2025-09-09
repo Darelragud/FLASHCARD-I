@@ -6,10 +6,10 @@
   <title>FlashCards — Topics</title>
   <style>
     :root{--bg:#f8fafc;--card:#fff;--muted:#6b7280;--accent:#2563eb}
-    body{font-family:Inter,-apple-system,system-ui,"Segoe UI",Roboto,Helvetica,Arial; margin:0;min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
+    body{font-family:Arial, sans-serif; margin:0;min-height:100vh;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
     .wrap{width:100%;max-width:980px;background:var(--card);border-radius:12px;box-shadow:0 10px 30px rgba(16,24,40,0.06);padding:24px;box-sizing:border-box}
-    h1{margin:0 0 6px 0;font-size:20px}
-    p.lead{margin:0 0 18px 0;color:var(--muted);font-size:13px}
+    h1{margin:0 0 6px 0;font-size:22px}
+    p.lead{margin:0 0 18px 0;color:var(--muted);font-size:14px}
     .controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
     select, input[type="text"]{padding:10px 12px;border-radius:8px;border:1px solid #e6edf3;background:#fff;font-size:14px;min-width:220px}
     .btn{padding:10px 14px;border-radius:8px;border:0;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
@@ -25,8 +25,9 @@
 <body>
   <div class="wrap" role="main">
     <h1>FlashCards — Topics</h1>
-    <p class="lead">Select a topic to open its flashcards page. To add a new topic, edit this file and add an entry to the topics array (see comments in the script).</p>
+    <p class="lead">Select a topic to open its flashcards page. Each topic is a separate HTML file in this repo.</p>
 
+    <!-- Dropdown + search -->
     <div class="controls">
       <select id="topicSelect" aria-label="Choose topic">
         <option value="">— choose a topic —</option>
@@ -35,28 +36,42 @@
       <button id="openBtn" class="btn">Open</button>
     </div>
 
+    <!-- Grid of topic cards -->
     <div id="topicsGrid" class="grid" aria-live="polite"></div>
 
-    <div class="note">Tip: each topic uses a separate HTML file. Example file names: <code>nursing-basics.html</code>, <code>circulation.html</code>. Upload new topic HTML files to the same repo root and add them below.</div>
+    <!-- Instructions note -->
+    <div class="note">
+      NOTE for you:<br>
+      1. Keep <code>index.html</code> as the homepage.<br>
+      2. Create a new HTML file for each topic (e.g., <code>circulation.html</code>).<br>
+      3. Add the new topic in the <b>topics array</b> inside the script below.<br>
+      4. The "filename" must match the uploaded HTML file name.
+    </div>
 
     <footer>Powered by your FlashCards repo</footer>
   </div>
 
   <script>
     /*
-      How to add a new topic:
-      1) Upload a new HTML file into your repo root, e.g. "circulation.html".
-      2) Add an object to the topics array below:
-         { id: "circulation", title: "Circulation", filename: "circulation.html", description: "Short description" }
-      3) Commit changes. The selector and the grid will link to that file:
-         https://your-username.github.io/FlashCards/circulation.html
+      === HOW TO ADD A NEW TOPIC ===
+      Each topic is an object in the "topics" array below.
+      Example format:
+      { id: "circulation", title: "Circulation", filename: "circulation.html", description: "Blood pressure, heart rate, etc." }
+      - id: unique short name (no spaces)
+      - title: the display name on the UI
+      - filename: the exact HTML filename you uploaded
+      - description: short text shown under the title
     */
 
     const topics = [
-      // ====== START: add new topics here ======
-      { id: "nanda", title: "NANDA Diagnoses", filename: "nanda.html", description: "Your NANDA flashcards (example file: nanda.html)" },
-      { id: "nursing-basics", title: "Nursing Basics", filename: "nursing-basics.html", description: "Vitals, normal ranges, simple Q&A" }
-      // ====== END: add new topics here ======
+      // Example topic 1
+      { id: "NANDA", title: "Nursing Basics", filename: "NANDA.html", description: "Terminologies, Patient Evaluation, simple Q&A" },
+
+      // Example topic 2
+      { id: "circulation", title: "Circulation", filename: "circulation.html", description: "Blood pressure and heart function" }
+
+      // Add more topics here ↓↓↓
+      // { id: "respiration", title: "Respiration", filename: "respiration.html", description: "Breathing and oxygen exchange" }
     ];
 
     const topicSelect = document.getElementById('topicSelect');
@@ -64,8 +79,9 @@
     const filterInput = document.getElementById('filterInput');
     const openBtn = document.getElementById('openBtn');
 
+    // Function to update UI with given list of topics
     function populateUI(list) {
-      // populate dropdown
+      // Dropdown
       topicSelect.innerHTML = '<option value="">— choose a topic —</option>';
       list.forEach(t => {
         const opt = document.createElement('option');
@@ -74,22 +90,26 @@
         topicSelect.appendChild(opt);
       });
 
-      // populate grid
+      // Grid of cards
       topicsGrid.innerHTML = '';
       list.forEach(t => {
         const card = document.createElement('div');
         card.className = 'topic-card';
+
         const title = document.createElement('div');
         title.className = 'topic-title';
         title.textContent = t.title;
+
         const desc = document.createElement('div');
         desc.className = 'topic-desc';
         desc.textContent = t.description || '';
+
         const link = document.createElement('a');
         link.className = 'small-link';
         link.href = t.filename;
         link.textContent = 'Open topic';
         link.setAttribute('aria-label', `Open ${t.title}`);
+
         card.appendChild(title);
         card.appendChild(desc);
         card.appendChild(link);
@@ -97,27 +117,21 @@
       });
     }
 
-    // initial render
+    // Initial load
     populateUI(topics);
 
-    // filter
+    // Filter by typing
     filterInput.addEventListener('input', () => {
       const q = filterInput.value.trim().toLowerCase();
       const filtered = topics.filter(t => (t.title + ' ' + (t.description||'')).toLowerCase().includes(q));
       populateUI(filtered);
     });
 
-    // open selected topic
+    // Open button
     openBtn.addEventListener('click', () => {
       const filename = topicSelect.value;
       if (!filename) return alert('Select a topic first');
-      // navigate to the file (same repo root)
       window.location.href = filename;
-    });
-
-    // allow Enter key on selector to open
-    topicSelect.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') openBtn.click();
     });
   </script>
 </body>
