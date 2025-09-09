@@ -85,8 +85,8 @@
                 <div class="bg-[#FEE2E2] p-4 rounded-xl cursor-pointer category-card" data-category="generative_ai"><h2 class="text-lg font-semibold text-gray-800">Generative AI</h2><p class="text-xs text-gray-600 mb-3">Contributors: Google</p><div class="flex justify-between items-center"><span id="count_generative_ai" class="bg-[#FECACA] text-xs font-semibold px-4 py-1.5 rounded-full"></span><i class="ph ph-arrow-right text-xl"></i></div></div>
                 <div class="bg-[#D1FAE5] p-4 rounded-xl cursor-pointer category-card" data-category="ecommerce_law"><h2 class="text-lg font-semibold text-gray-800">RA 8792: E-Commerce Law</h2><p class="text-xs text-gray-600 mb-3">Contributors: PH Gov</p><div class="flex justify-between items-center"><span id="count_ecommerce_law" class="bg-[#A7F3D0] text-xs font-semibold px-4 py-1.5 rounded-full"></span><i class="ph ph-arrow-right text-xl"></i></div></div>
             </main>
-        </div>
-<footer class="flex justify-center items-center pt-4 border-t mt-4">
+
+            <footer class="flex justify-center items-center pt-4 border-t mt-4">
                 <!-- Back button -->
 <button id="backButton" style="padding:10px 14px;border-radius:8px;border:none;background:#2563eb;color:#fff;font-weight:600;cursor:pointer;">
   Back to Topics
@@ -100,6 +100,7 @@
 </script>
 
             </footer>
+        </div>
 
         <!-- Screen 2: Flashcard View -->
         <div id="screen2" class="phone-screen w-full max-w-sm mx-auto bg-white rounded-3xl p-4 border border-gray-200 flex-col h-[700px] hidden">
@@ -107,7 +108,7 @@
                 <i id="backButton2" class="ph ph-arrow-left text-2xl cursor-pointer"></i>
                 <div class="text-center">
                     <h1 id="categoryTitle" class="text-xl font-bold text-gray-800">Category</h1>
-                    <p class="text-sm text-gray-500">Contributors: Various</p>
+                    <p id="categoryContributor" class="text-sm text-gray-500">Contributors: Various</p>
                 </div>
                 <i class="ph ph-info text-2xl"></i>
             </header>
@@ -150,62 +151,71 @@
 
 <script>
     const flashcardData = {
-        ai_for_everyone: [
-            { term: 'Core message of implementing AI', definition: 'AI is a business transformation, not just a technology. Success depends on aligning AI with business strategy.' },
-            { term: 'How a Smart Speaker works (4 steps)', definition: '1. <b>Trigger Word</b>: Detects the wake word.<br>2. <b>Speech Recognition</b>: Converts audio to text.<br>3. <b>Intent Recognition</b>: Classifies the command\'s category.<br>4. <b>Execution</b>: Connects to the correct service to fulfill the request.' },
-            { term: 'Three business impacts of Smart Speakers', definition: '1. Enhances customer convenience.<br>2. Collects valuable user data.<br>3. Expands the company\'s ecosystem of services.' },
-            { term: 'Sensor Fusion in a self-driving car', definition: 'It combines data from multiple sources, like cameras and radar, to get an accurate understanding of its environment.' },
-            { term: 'Four main components of a self-driving car', definition: '1. <b>Sensor Input</b> (cameras, radar)<br>2. <b>Object Detection</b> (cars, pedestrians)<br>3. <b>Motion Planning</b> (calculates a safe path)<br>4. <b>Control Execution</b> (steering, braking)' },
-            { term: 'Role of an AI Product Manager', definition: 'They help decide what to build by determining what is both feasible and valuable for the business.' },
-            { term: 'Role of a Machine Learning Engineer', definition: 'They design, train, and optimize machine learning models for performance and scalability.' },
-            { term: 'Purpose of the AI Transformation Playbook', definition: 'A guideline for companies to successfully adopt and integrate AI by helping them choose projects, build teams, and align AI with business goals.' },
-            { term: 'Two key "Don\'ts" in AI Pitfalls', definition: '<b>Don\'t</b> expect AI to solve everything.<br><b>Don\'t</b> expect the AI project to work the first time.' },
-            { term: 'Two key "Do\'s" in AI Pitfalls', definition: '<b>Do</b> be realistic about what AI can do.<br><b>Do</b> plan for AI development to be an iterative process.' },
-            { term: 'The "Goldilocks rule" for AI\'s impact', definition: 'Finding a balanced middle ground: avoiding over-optimism (AI will solve everything) and over-pessimism (AI is a sentient threat).' },
-            { term: 'What is an "adversarial attack" on AI?', definition: 'A technique used to fool an AI model by providing deceptive input, causing it to make a mistake.' },
-            { term: 'How does AI become biased?', definition: 'It learns from large datasets that contain historical human biases, stereotypes, and unfair practices. The AI absorbs these biases during training.' },
-            { term: 'Two major risks of adverse use of AI', definition: '1. The creation and spread of misinformation via deepfakes.<br>2. Threats to democracy and personal privacy.' },
-            { term: 'What is "Leapfrogging Technology"?', definition: 'When developing economies skip older, less efficient technologies and adopt the newest AI-driven solutions directly, potentially accelerating growth.' },
-            { term: 'Likely impact of AI on jobs', definition: 'AI may displace repetitive jobs but will also create new roles, requiring workers to be reskilled and upskilled.' },
-            { term: 'Business impact of self-driving cars', definition: '1. <b>Safety</b>: Reduce accidents from human error.<br>2. <b>Efficiency</b>: Optimize routes and traffic flow.<br>3. <b>Accessibility</b>: Provide mobility for elderly and disabled individuals.' }
-        ],
-        generative_ai: [
-            { term: 'Primary function of Generative AI', definition: 'To produce various types of new, original content (text, images, audio, etc.) based on the data it has been trained on.' },
-            { term: 'Hierarchy of AI subcategories', definition: 'Artificial Intelligence -> Machine Learning -> Deep Learning -> Generative AI.' },
-            { term: 'Machine Learning vs. Deep Learning', definition: '<b>Machine Learning</b> is learning from data without explicit programming. <b>Deep Learning</b> is a subset of ML that uses artificial neural networks for more complex tasks.' },
-            { term: 'Supervised vs. Unsupervised Learning', definition: '<b>Supervised Learning</b> trains on labeled data (with correct answers). <b>Unsupervised Learning</b> trains on unlabeled data to find hidden patterns on its own.' },
-            { term: 'What is Reinforcement Learning?', definition: 'Teaching a model to make decisions by rewarding it for good choices and penalizing it for bad ones, learning through trial and error.' },
-            { term: 'Discriminative vs. Generative model', definition: 'A <b>Discriminative</b> model classifies data (e.g., is this a dog or a cat?). A <b>Generative</b> model creates new data instances (e.g., generate a new image of a dog).' },
-            { term: 'When is y = f(x) considered Generative AI?', definition: 'When the output \'y\' is complex content like Natural Language, an Image, or Audio, not just a number, class, or probability.' },
-            { term: 'What is a foundation model?', definition: 'A large-scale model (like Gemini or GPT) trained on a massive amount of data, which serves as a powerful base that can be adapted for many different tasks.' },
-            { term: 'What is a "Transformer"?', definition: 'The powerful neural network architecture behind modern language models, consisting of an <b>encoder</b> and a <b>decoder</b>.' },
-            { term: 'What are "hallucinations" in GenAI?', definition: 'Outputs generated by the model that are nonsensical, factually incorrect, or grammatically wrong.' },
-            { term: 'Two causes of AI hallucinations', definition: '1. Not enough data or noisy/dirty training data.<br>2. Not enough context or constraints provided in the prompt.' },
-            { term: 'What is a Text-to-Image model?', definition: 'A model trained on a large dataset of images and their text descriptions, allowing it to generate a new image from a text prompt.' },
-            { term: 'What is "diffusion" in image models?', definition: 'A technique where the model starts with random noise and gradually refines it to match the text prompt and form a coherent image.' },
-            { term: 'Use of a Text-to-3D model', definition: 'It generates three-dimensional objects from a text description for use in games, simulations, or other 3D environments.' },
-            { term: 'What is a Text-to-Task model?', definition: 'A model trained to perform a specific, defined action based on a text input, turning a command into an operation.' },
-            { term: 'What is Vertex AI Agent Builder?', definition: 'A tool within Google\'s Vertex AI platform that helps users build applications like chatbots and search engines with little coding experience.' },
-            { term: 'What does "multimodal" mean for an AI model?', definition: 'It means the model (like Gemini) can understand and process information from multiple types of data, including text, images, audio, and code.' }
-        ],
-        ecommerce_law: [
-            { term: 'Official name of RA 8792', definition: 'The Electronic Commerce Act of 2000.' },
-            { term: 'What event led to RA 8792?', definition: 'The "ILOVEYOU" computer worm in May 2000. No laws existed at the time to prosecute its creator.' },
-            { term: 'What is a "click and mortar" store?', definition: 'A business with both a physical presence (brick and mortar) and an online e-commerce presence.' },
-            { term: 'What is B2C e-commerce?', definition: '<b>Business-to-Consumer</b>: The sale of goods and services from a business directly to the general public.' },
-            { term: 'What is C2B e-commerce?', definition: '<b>Consumer-to-Business</b>: When a consumer sells goods or services to a business (e.g., a freelancer selling stock photos).' },
-            { term: 'What is B2B e-commerce?', definition: '<b>Business-to-Business</b>: Takes place between two businesses, where one provides services or products to the other.' },
-            { term: 'What is C2C e-commerce?', definition: '<b>Consumer-to-Consumer</b>: Takes place between two consumers, often through an online marketplace or auction site.' },
-            { term: 'Primary objective of the E-Commerce Act', definition: 'To facilitate electronic transactions by giving legal recognition and ensuring the authenticity and reliability of electronic documents and signatures.' },
-            { term: 'Legal status of electronic documents (Sec 6-8)', definition: 'They have the same legal effect, validity, and enforceability as their physical, paper-based counterparts.' },
-            { term: 'What does Section 16 state about contracts?', definition: 'It confirms the formation and validity of contracts made in electronic form.' },
-            { term: 'What does Section 27 mandate for the government?', definition: 'It required all government offices to be capable of using electronic transactions and documents by June 2002.' },
-            { term: 'What is "RPWEB" (Section 28)?', definition: 'A government strategy to connect all its offices to the Internet and provide universal, low-cost internet access to the public.' },
-            { term: 'Which agency supervises e-commerce (Section 29)?', definition: 'The Department of Trade and Industry (DTI).' },
-            { term: 'Penalty for hacking under Section 33', definition: 'A fine of at least P100,000 up to the maximum commensurate damage, and imprisonment of 6 months to 3 years.' },
-            { term: 'Penalty for online piracy', definition: 'The penalties are the same as for hacking.' },
-            { term: 'Maximum penalty for other violations of the Act', definition: 'A maximum fine of one million pesos (P1,000,000) or six (6) years of imprisonment.' }
-        ]
+        ai_for_everyone: {
+            contributor: 'Coursera',
+            cards: [
+                { term: 'Core message of implementing AI', definition: 'AI is a business transformation, not just a technology. Success depends on aligning AI with business strategy.' },
+                { term: 'How a Smart Speaker works (4 steps)', definition: '1. <b>Trigger Word</b>: Detects the wake word.<br>2. <b>Speech Recognition</b>: Converts audio to text.<br>3. <b>Intent Recognition</b>: Classifies the command\'s category.<br>4. <b>Execution</b>: Connects to the correct service to fulfill the request.' },
+                { term: 'Three business impacts of Smart Speakers', definition: '1. Enhances customer convenience.<br>2. Collects valuable user data.<br>3. Expands the company\'s ecosystem of services.' },
+                { term: 'Sensor Fusion in a self-driving car', definition: 'It combines data from multiple sources, like cameras and radar, to get an accurate understanding of its environment.' },
+                { term: 'Four main components of a self-driving car', definition: '1. <b>Sensor Input</b> (cameras, radar)<br>2. <b>Object Detection</b> (cars, pedestrians)<br>3. <b>Motion Planning</b> (calculates a safe path)<br>4. <b>Control Execution</b> (steering, braking)' },
+                { term: 'Role of an AI Product Manager', definition: 'They help decide what to build by determining what is both feasible and valuable for the business.' },
+                { term: 'Role of a Machine Learning Engineer', definition: 'They design, train, and optimize machine learning models for performance and scalability.' },
+                { term: 'Purpose of the AI Transformation Playbook', definition: 'A guideline for companies to successfully adopt and integrate AI by helping them choose projects, build teams, and align AI with business goals.' },
+                { term: 'Two key "Don\'ts" in AI Pitfalls', definition: '<b>Don\'t</b> expect AI to solve everything.<br><b>Don\'t</b> expect the AI project to work the first time.' },
+                { term: 'Two key "Do\'s" in AI Pitfalls', definition: '<b>Do</b> be realistic about what AI can do.<br><b>Do</b> plan for AI development to be an iterative process.' },
+                { term: 'The "Goldilocks rule" for AI\'s impact', definition: 'Finding a balanced middle ground: avoiding over-optimism (AI will solve everything) and over-pessimism (AI is a sentient threat).' },
+                { term: 'What is an "adversarial attack" on AI?', definition: 'A technique used to fool an AI model by providing deceptive input, causing it to make a mistake.' },
+                { term: 'How does AI become biased?', definition: 'It learns from large datasets that contain historical human biases, stereotypes, and unfair practices. The AI absorbs these biases during training.' },
+                { term: 'Two major risks of adverse use of AI', definition: '1. The creation and spread of misinformation via deepfakes.<br>2. Threats to democracy and personal privacy.' },
+                { term: 'What is "Leapfrogging Technology"?', definition: 'When developing economies skip older, less efficient technologies and adopt the newest AI-driven solutions directly, potentially accelerating growth.' },
+                { term: 'Likely impact of AI on jobs', definition: 'AI may displace repetitive jobs but will also create new roles, requiring workers to be reskilled and upskilled.' },
+                { term: 'Business impact of self-driving cars', definition: '1. <b>Safety</b>: Reduce accidents from human error.<br>2. <b>Efficiency</b>: Optimize routes and traffic flow.<br>3. <b>Accessibility</b>: Provide mobility for elderly and disabled individuals.' }
+            ]
+        },
+        generative_ai: {
+            contributor: 'Google',
+            cards: [
+                { term: 'Primary function of Generative AI', definition: 'To produce various types of new, original content (text, images, audio, etc.) based on the data it has been trained on.' },
+                { term: 'Hierarchy of AI subcategories', definition: 'Artificial Intelligence -> Machine Learning -> Deep Learning -> Generative AI.' },
+                { term: 'Machine Learning vs. Deep Learning', definition: '<b>Machine Learning</b> is learning from data without explicit programming. <b>Deep Learning</b> is a subset of ML that uses artificial neural networks for more complex tasks.' },
+                { term: 'Supervised vs. Unsupervised Learning', definition: '<b>Supervised Learning</b> trains on labeled data (with correct answers). <b>Unsupervised Learning</b> trains on unlabeled data to find hidden patterns on its own.' },
+                { term: 'What is Reinforcement Learning?', definition: 'Teaching a model to make decisions by rewarding it for good choices and penalizing it for bad ones, learning through trial and error.' },
+                { term: 'Discriminative vs. Generative model', definition: 'A <b>Discriminative</b> model classifies data (e.g., is this a dog or a cat?). A <b>Generative</b> model creates new data instances (e.g., generate a new image of a dog).' },
+                { term: 'When is y = f(x) considered Generative AI?', definition: 'When the output \'y\' is complex content like Natural Language, an Image, or Audio, not just a number, class, or probability.' },
+                { term: 'What is a foundation model?', definition: 'A large-scale model (like Gemini or GPT) trained on a massive amount of data, which serves as a powerful base that can be adapted for many different tasks.' },
+                { term: 'What is a "Transformer"?', definition: 'The powerful neural network architecture behind modern language models, consisting of an <b>encoder</b> and a <b>decoder</b>.' },
+                { term: 'What are "hallucinations" in GenAI?', definition: 'Outputs generated by the model that are nonsensical, factually incorrect, or grammatically wrong.' },
+                { term: 'Two causes of AI hallucinations', definition: '1. Not enough data or noisy/dirty training data.<br>2. Not enough context or constraints provided in the prompt.' },
+                { term: 'What is a Text-to-Image model?', definition: 'A model trained on a large dataset of images and their text descriptions, allowing it to generate a new image from a text prompt.' },
+                { term: 'What is "diffusion" in image models?', definition: 'A technique where the model starts with random noise and gradually refines it to match the text prompt and form a coherent image.' },
+                { term: 'Use of a Text-to-3D model', definition: 'It generates three-dimensional objects from a text description for use in games, simulations, or other 3D environments.' },
+                { term: 'What is a Text-to-Task model?', definition: 'A model trained to perform a specific, defined action based on a text input, turning a command into an operation.' },
+                { term: 'What is Vertex AI Agent Builder?', definition: 'A tool within Google\'s Vertex AI platform that helps users build applications like chatbots and search engines with little coding experience.' },
+                { term: 'What does "multimodal" mean for an AI model?', definition: 'It means the model (like Gemini) can understand and process information from multiple types of data, including text, images, audio, and code.' }
+            ]
+        },
+        ecommerce_law: {
+            contributor: 'PH Gov',
+            cards: [
+                { term: 'Official name of RA 8792', definition: 'The Electronic Commerce Act of 2000.' },
+                { term: 'What event led to RA 8792?', definition: 'The "ILOVEYOU" computer worm in May 2000. No laws existed at the time to prosecute its creator.' },
+                { term: 'What is a "click and mortar" store?', definition: 'A business with both a physical presence (brick and mortar) and an online e-commerce presence.' },
+                { term: 'What is B2C e-commerce?', definition: '<b>Business-to-Consumer</b>: The sale of goods and services from a business directly to the general public.' },
+                { term: 'What is C2B e-commerce?', definition: '<b>Consumer-to-Business</b>: When a consumer sells goods or services to a business (e.g., a freelancer selling stock photos).' },
+                { term: 'What is B2B e-commerce?', definition: '<b>Business-to-Business</b>: Takes place between two businesses, where one provides services or products to the other.' },
+                { term: 'What is C2C e-commerce?', definition: '<b>Consumer-to-Consumer</b>: Takes place between two consumers, often through an online marketplace or auction site.' },
+                { term: 'Primary objective of the E-Commerce Act', definition: 'To facilitate electronic transactions by giving legal recognition and ensuring the authenticity and reliability of electronic documents and signatures.' },
+                { term: 'Legal status of electronic documents (Sec 6-8)', definition: 'They have the same legal effect, validity, and enforceability as their physical, paper-based counterparts.' },
+                { term: 'What does Section 16 state about contracts?', definition: 'It confirms the formation and validity of contracts made in electronic form.' },
+                { term: 'What does Section 27 mandate for the government?', definition: 'It required all government offices to be capable of using electronic transactions and documents by June 2002.' },
+                { term: 'What is "RPWEB" (Section 28)?', definition: 'A government strategy to connect all its offices to the Internet and provide universal, low-cost internet access to the public.' },
+                { term: 'Which agency supervises e-commerce (Section 29)?', definition: 'The Department of Trade and Industry (DTI).' },
+                { term: 'Penalty for hacking under Section 33', definition: 'A fine of at least P100,000 up to the maximum commensurate damage, and imprisonment of 6 months to 3 years.' },
+                { term: 'Penalty for online piracy', definition: 'The penalties are the same as for hacking.' },
+                { term: 'Maximum penalty for other violations of the Act', definition: 'A maximum fine of one million pesos (P1,000,000) or six (6) years of imprisonment.' }
+            ]
+        }
     };
 
     const screen1 = document.getElementById('screen1');
@@ -213,6 +223,7 @@
     const categoryCards = document.querySelectorAll('.category-card');
     const backButton2 = document.getElementById('backButton2');
     const categoryTitle = document.getElementById('categoryTitle');
+    const categoryContributor = document.getElementById('categoryContributor');
     const progressBar = document.getElementById('progressBar');
     const flashcard = document.getElementById('flashcard');
     const cardTerm = document.getElementById('cardTerm');
@@ -221,15 +232,14 @@
     const nextButton = document.getElementById('nextButton');
     const prevButton = document.getElementById('prevButton');
 
-
     let currentCategory = '';
     let currentDeck = [];
     let currentIndex = 0;
 
     function setupTermCounts() {
-        document.getElementById('count_ai_for_everyone').textContent = `${flashcardData.ai_for_everyone.length} Terms`;
-        document.getElementById('count_generative_ai').textContent = `${flashcardData.generative_ai.length} Terms`;
-        document.getElementById('count_ecommerce_law').textContent = `${flashcardData.ecommerce_law.length} Terms`;
+        document.getElementById('count_ai_for_everyone').textContent = `${flashcardData.ai_for_everyone.cards.length} Terms`;
+        document.getElementById('count_generative_ai').textContent = `${flashcardData.generative_ai.cards.length} Terms`;
+        document.getElementById('count_ecommerce_law').textContent = `${flashcardData.ecommerce_law.cards.length} Terms`;
     }
 
     function showScreen(screen) {
@@ -272,9 +282,11 @@
     categoryCards.forEach(card => {
         card.addEventListener('click', () => {
             currentCategory = card.dataset.category;
-            currentDeck = flashcardData[currentCategory] || [];
+            const categoryData = flashcardData[currentCategory];
+            currentDeck = categoryData.cards || [];
             currentIndex = 0;
             categoryTitle.textContent = card.querySelector('h2').textContent;
+            categoryContributor.textContent = `Contributors: ${categoryData.contributor}`;
             loadCard();
             showScreen(screen2);
         });
@@ -308,13 +320,8 @@
     nextButton.addEventListener('click', () => navigate(1));
     prevButton.addEventListener('click', () => navigate(-1));
 
-
-    // Initialize term counts on page load
     document.addEventListener('DOMContentLoaded', setupTermCounts);
 
 </script>
 </body>
 </html>
-
-
-
