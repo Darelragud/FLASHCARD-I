@@ -1,0 +1,498 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & E-Commerce Law Flashcards</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --primary-color: #007bff;
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --border-radius: 20px;
+        }
+
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+
+        .app-container {
+            width: 100%;
+            max-width: 420px;
+            /* Made the height responsive to the viewport for better fit on different screens */
+            height: 90vh;
+            max-height: 850px;
+            min-height: 600px;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+
+        /* --- Category Screen --- */
+        #category-screen {
+            padding: 30px 20px;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+
+        .header h1 {
+            font-size: 28px;
+            margin: 0;
+            font-weight: 700;
+            transition: color 0.3s ease; /* Added a subtle transition */
+        }
+
+
+        .header p {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+
+        .category-card {
+            /* Added more bottom padding to create space for the card count element */
+            padding: 25px 25px 60px 25px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .category-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            color: white;
+        }
+
+
+        .category-card p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+        }
+        
+        .card-count {
+            position: absolute;
+            bottom: 20px;
+            right: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+
+        .cat-1 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .cat-2 { background: linear-gradient(135deg, #ff85a1 0%, #ffc0cb 100%); }
+        .cat-3 { background: linear-gradient(135deg, #8fd3f4 0%, #84fab0 100%); }
+
+
+        /* --- Flashcard Screen --- */
+        #flashcard-screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .flashcard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .flashcard-header h2 {
+            font-size: 20px;
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+        }
+
+
+        .back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .back-btn svg {
+             width: 24px;
+             height: 24px;
+             stroke: #6c757d;
+        }
+
+
+        .flashcard-area {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            padding: 20px 0;
+        }
+
+
+        .flashcard {
+            /* Drastically reduced height for a better aesthetic */
+            width: 95%;
+            height: 70%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: center;
+            /* Aligned text to the top for better readability of long content */
+            align-items: flex-start;
+            padding: 30px; /* Increased padding */
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 18px;
+            overflow-y: auto;
+            /* Added transition for opacity to create a smooth fade effect */
+            transition: opacity 0.3s ease-in-out;
+        }
+
+
+        /* Added custom scrollbar styling for a cleaner look */
+        .flashcard-face::-webkit-scrollbar {
+            width: 8px;
+        }
+
+
+        .flashcard-face::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+        }
+
+
+        .flashcard-face::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 10px;
+            border: 2px solid var(--card-bg);
+        }
+
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background-color: #eef8ff;
+            /* Make the back face invisible by default */
+            opacity: 0;
+        }
+
+
+        /* When card is flipped, hide the front and show the back */
+        .flashcard.flipped .flashcard-front {
+            opacity: 0;
+        }
+        .flashcard.flipped .flashcard-back {
+            opacity: 1;
+        }
+
+
+        .flashcard-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+        }
+        
+        .nav-btn {
+            background: none;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        #card-counter {
+            font-size: 16px;
+            color: #6c757d;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="app-container">
+        <!-- Screen 1: Category Selection -->
+        <div id="category-screen">
+            <div class="header">
+                <h1>Study Topics</h1>
+                <p>Pick a set to practice</p>
+            </div>
+            <div class="category-card cat-1" data-category="ai_for_everyone">
+                <h2>AI for Everyone</h2>
+                <p>Key concepts, case studies, and business implications of AI.</p>
+                <div class="card-count" id="count_ai_for_everyone"></div>
+            </div>
+            <div class="category-card cat-2" data-category="generative_ai">
+                <h2>Generative AI</h2>
+                <p>How GenAI works, its models, and applications.</p>
+                <div class="card-count" id="count_generative_ai"></div>
+            </div>
+            <div class="category-card cat-3" data-category="ecommerce_law">
+                <h2>RA 8792: E-Commerce Law</h2>
+                <p>Legal framework for electronic transactions in the Philippines.</p>
+                <div class="card-count" id="count_ecommerce_law"></div>
+            </div>
+        </div>
+
+
+        <!-- Screen 2: Flashcard View -->
+        <div id="flashcard-screen">
+            <div class="flashcard-header">
+                <button class="back-btn" id="back-to-categories">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <h2 id="flashcard-category-title">Category</h2>
+            </div>
+            <div class="flashcard-area">
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-face flashcard-front" id="flashcard-front"></div>
+                    <div class="flashcard-face flashcard-back" id="flashcard-back"></div>
+                </div>
+            </div>
+            <div class="flashcard-nav">
+                <button class="nav-btn" id="prev-card">Previous</button>
+                <span id="card-counter">1 / 50</span>
+                <button class="nav-btn" id="next-card">Next</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const flashcardData = {
+            "ai_for_everyone": {
+                title: "AI for Everyone",
+                cards: [
+                    { q: "What is the core message about implementing AI in a company?", a: "AI is a business transformation, not just a technology. Success depends on aligning AI with business strategy." },
+                    { q: "What are the four steps in how a Smart Speaker processes a command?", a: "1. <b>Trigger Word</b>: Detects the wake word.<br>2. <b>Speech Recognition</b>: Converts audio to text.<br>3. <b>Intent Recognition</b>: Classifies the command's category.<br>4. <b>Execution</b>: Connects to the correct service to fulfill the request." },
+                    { q: "Name three business impacts of Smart Speakers.", a: "1. Enhances customer convenience.<br>2. Collects valuable user data.<br>3. Expands the company's ecosystem of services." },
+                    { q: "How does a self-driving car use Sensor Fusion?", a: "It combines data from multiple sources, like cameras and radar, to get an accurate understanding of its environment." },
+                    { q: "What are the four main components of how a self-driving car operates?", a: "1. <b>Sensor Input</b> (cameras, radar)<br>2. <b>Object Detection</b> (cars, pedestrians)<br>3. <b>Motion Planning</b> (calculates a safe path)<br>4. <b>Control Execution</b> (steering, braking)" },
+                    { q: "What is the role of an AI Product Manager?", a: "They help decide what to build by determining what is both feasible and valuable for the business." },
+                    { q: "What is the role of a Machine Learning Engineer?", a: "They design, train, and optimize machine learning models for performance and scalability." },
+                    { q: "What is the purpose of the AI Transformation Playbook?", a: "It's a guideline for companies to successfully adopt and integrate AI by helping them choose projects, build teams, and align AI with business goals." },
+                    { q: "What are two key 'Don'ts' from the AI Pitfalls to Avoid?", a: "<b>Don't</b> expect AI to solve everything.<br><b>Don't</b> expect the AI project to work the first time." },
+                    { q: "What are two key 'Do's' from the AI Pitfalls to Avoid?", a: "<b>Do</b> be realistic about what AI can do.<br><b>Do</b> plan for AI development to be an iterative process." },
+                    { q: "What is the 'Goldilocks rule' for viewing AI's impact?", a: "Finding a balanced middle ground: avoiding over-optimism (AI will solve everything) and over-pessimism (AI is a sentient threat)." },
+                    { q: "What is an 'adversarial attack' on AI?", a: "It's a technique used to fool an AI model by providing deceptive input, causing it to make a mistake." },
+                    { q: "How does AI become biased?", a: "It learns from large datasets that contain historical human biases, stereotypes, and unfair practices. The AI absorbs these biases during training." },
+                    { q: "What are two major risks of the adverse use of AI?", a: "1. The creation and spread of misinformation via deepfakes.<br>2. Threats to democracy and personal privacy." },
+                    { q: "What does 'Leapfrogging Technology' mean for developing economies?", a: "It means they can skip older, less efficient technologies and adopt the newest AI-driven solutions directly, potentially accelerating growth." },
+                    { q: "What is the likely impact of AI on jobs?", a: "AI may displace repetitive jobs but will also create new roles. This will require workers to be reskilled and upskilled for the new opportunities." },
+                    { q: "What business impact can self-driving cars have?", a: "1. <b>Safety</b>: Reduce accidents from human error.<br>2. <b>Efficiency</b>: Optimize routes and traffic flow.<br>3. <b>Accessibility</b>: Provide mobility for elderly and disabled individuals." }
+                ]
+            },
+            "generative_ai": {
+                title: "Generative AI",
+                cards: [
+                    { q: "What is the primary function of Generative AI?", a: "To produce various types of new, original content (text, images, audio, etc.) based on the data it has been trained on." },
+                    { q: "What is the hierarchy of AI subcategories, from broadest to most specific?", a: "Artificial Intelligence -> Machine Learning -> Deep Learning -> Generative AI." },
+                    { q: "What is the key difference between Machine Learning and Deep Learning?", a: "<b>Machine Learning</b> is the ability for computers to learn from data without explicit programming. <b>Deep Learning</b> is a subset of ML that uses artificial neural networks to mimic the human brain for more complex tasks." },
+                    { q: "What is the main difference between Supervised and Unsupervised Learning?", a: "<b>Supervised Learning</b> trains on labeled data (data with correct answers). <b>Unsupervised Learning</b> trains on unlabeled data to find hidden patterns on its own." },
+                    { q: "What is Reinforcement Learning?", a: "A method of teaching a model to make decisions by rewarding it for good choices and penalizing it for bad ones, learning through trial and error." },
+                    { q: "Distinguish between a Discriminative and a Generative model.", a: "A <b>Discriminative</b> model classifies data (e.g., is this a dog or a cat?). A <b>Generative</b> model creates new data instances (e.g., generate a new image of a dog)." },
+                    { q: "In the function y = f(x), when is the model considered Generative AI?", a: "It is Generative AI when the output 'y' is complex content like Natural Language, an Image, or Audio, not just a number, class, or probability." },
+                    { q: "What is a foundation model?", a: "A large-scale model (like Gemini or GPT) trained on a massive amount of data, which serves as a powerful base that can be adapted for many different tasks." },
+                    { q: "What is a 'Transformer' and what are its two main components?", a: "A Transformer is the powerful neural network architecture behind modern language models. Its two main components are an <b>encoder</b> and a <b>decoder</b>." },
+                    { q: "What are 'hallucinations' in the context of GenAI?", a: "Outputs generated by the model that are nonsensical, factually incorrect, or grammatically wrong." },
+                    { q: "What are two potential causes of AI hallucinations?", a: "1. Not enough data or noisy/dirty training data.<br>2. Not enough context or constraints provided in the prompt." },
+                    { q: "What is a Text-to-Image model?", a: "A model trained on a large dataset of images and their corresponding text descriptions, which allows it to generate a new image from a text prompt." },
+                    { q: "What is 'diffusion' in text-to-image models?", a: "A technique where the model starts with random noise and gradually refines it, step-by-step, to match the text prompt and form a coherent image." },
+                    { q: "What is a Text-to-3D model used for?", a: "It generates three-dimensional objects from a text description, which can then be used in games, simulations, or other 3D environments." },
+                    { q: "What is a Text-to-Task model?", a: "A model trained to perform a specific, defined action based on a text input, essentially turning a command into an operation." },
+                    { q: "What is Vertex AI Agent Builder?", a: "A tool within Google's Vertex AI platform that helps users, even those with little coding experience, build applications like chatbots and search engines." },
+                    { q: "What does it mean that Gemini is a 'multimodal' AI model?", a: "It means Gemini can understand and process information from multiple types of data, including text, images, audio, and code." }
+                ]
+            },
+            "ecommerce_law": {
+                title: "RA 8792",
+                cards: [
+                    { q: "What is the official name of RA 8792?", a: "The Electronic Commerce Act of 2000." },
+                    { q: "What major cyber event in the Philippines led to the creation of RA 8792?", a: "The 'ILOVEYOU' computer worm in May 2000. No laws existed at the time to prosecute its creator for computer-related crimes." },
+                    { q: "What is a 'click and mortar' store?", a: "A business that has both a physical presence (brick and mortar) and an online e-commerce presence." },
+                    { q: "What is B2C e-commerce?", a: "<b>Business-to-Consumer</b>: The sale of goods and services from a business directly to the general public (e.g., buying from an online retailer)." },
+                    { q: "What is C2B e-commerce?", a: "<b>Consumer-to-Business</b>: When a consumer sells goods or services to a business (e.g., a freelance photographer selling stock photos to a company)." },
+                    { q: "What is B2B e-commerce?", a: "<b>Business-to-Business</b>: Takes place between two businesses, where one provides services or products to the other (e.g., a parts manufacturer selling to a car company)." },
+                    { q: "What is C2C e-commerce?", a: "<b>Consumer-to-Consumer</b>: Takes place between two consumers, often through an online marketplace or auction site." },
+                    { q: "What is the primary objective of the E-Commerce Act?", a: "To facilitate electronic transactions by giving legal recognition and ensuring the authenticity and reliability of electronic documents, messages, and signatures." },
+                    { q: "According to Section 6, 7, and 8 of RA 8792, what is the legal status of electronic data, documents, and signatures?", a: "They are given full legal recognition, meaning they have the same legal effect, validity, and enforceability as their physical, paper-based counterparts." },
+                    { q: "What does Section 16 of the act state about contracts?", a: "It confirms the formation and validity of contracts made in electronic form." },
+                    { q: "What does Section 27 mandate for the Philippine government?", a: "It required all government offices to have the capability to use electronic transactions and documents within two years of the law's enactment (by June 2002)." },
+                    { q: "What is 'RPWEB' as mentioned in Section 28?", a: "A government strategy to connect all its offices to the Internet and provide universal, low-cost internet access to the general public." },
+                    { q: "Which government department is tasked by Section 29 to supervise the development of e-commerce in the country?", a: "The Department of Trade and Industry (DTI)." },
+                    { q: "What is the penalty for hacking or cracking under Section 33?", a: "A fine of at least P100,000 up to the maximum commensurate damage, and imprisonment of 6 months to 3 years." },
+                    { q: "What is the penalty for online piracy that infringes on intellectual property rights?", a: "The penalties are the same as for hacking." },
+                    { q: "What is the maximum penalty for other violations of the E-Commerce Act?", a: "A maximum fine of one million pesos (P1,000,000) or six (6) years of imprisonment." }
+                ]
+            }
+        };
+
+
+        // DOM elements
+        const categoryScreen = document.getElementById('category-screen');
+        const flashcardScreen = document.getElementById('flashcard-screen');
+        const categoryCards = document.querySelectorAll('.category-card');
+        const backBtn = document.getElementById('back-to-categories');
+        const flashcardCategoryTitle = document.getElementById('flashcard-category-title');
+        const flashcardEl = document.getElementById('flashcard');
+        const flashcardFront = document.getElementById('flashcard-front');
+        const flashcardBack = document.getElementById('flashcard-back');
+        const prevBtn = document.getElementById('prev-card');
+        const nextBtn = document.getElementById('next-card');
+        const cardCounter = document.getElementById('card-counter');
+
+
+        let currentCategory = '';
+        let currentCardIndex = 0;
+
+
+        // Function to set up and display category counts
+        function setupCategoryCounts() {
+            Object.keys(flashcardData).forEach(categoryKey => {
+                const countEl = document.getElementById(`count_${categoryKey}`);
+                if (countEl) {
+                    const cardCount = flashcardData[categoryKey].cards.length;
+                    countEl.textContent = `${cardCount} Cards`;
+                }
+            });
+        }
+        
+        // Function to show a card
+        function showCard(index) {
+            const cards = flashcardData[currentCategory].cards;
+            if (index >= 0 && index < cards.length) {
+                flashcardEl.classList.remove('flipped');
+                setTimeout(() => { // allow flip back animation to finish before changing content
+                   flashcardFront.innerHTML = cards[index].q;
+                   flashcardBack.innerHTML = cards[index].a;
+                   cardCounter.textContent = `${index + 1} / ${cards.length}`;
+                }, 150);
+            }
+        }
+
+
+        // Event Listeners for category selection
+        categoryCards.forEach(card => {
+            card.addEventListener('click', () => {
+                currentCategory = card.dataset.category;
+                flashcardCategoryTitle.textContent = flashcardData[currentCategory].title;
+                currentCardIndex = 0;
+                
+                categoryScreen.style.display = 'none';
+                flashcardScreen.style.display = 'flex';
+                
+                showCard(currentCardIndex);
+            });
+        });
+
+
+        // Event listener for back button
+        backBtn.addEventListener('click', () => {
+            flashcardScreen.style.display = 'none';
+            categoryScreen.style.display = 'block';
+        });
+
+
+        // Event listener for flipping the card
+        flashcardEl.addEventListener('click', () => {
+            flashcardEl.classList.toggle('flipped');
+        });
+
+
+        // Event listeners for navigation
+        nextBtn.addEventListener('click', () => {
+            const cards = flashcardData[currentCategory].cards;
+            if (currentCardIndex < cards.length - 1) {
+                currentCardIndex++;
+                showCard(currentCardIndex);
+            }
+        });
+
+
+        prevBtn.addEventListener('click', () => {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                showCard(currentCardIndex);
+            }
+        });
+        
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            setupCategoryCounts();
+        });
+
+
+    </script>
+</body>
+</html>
