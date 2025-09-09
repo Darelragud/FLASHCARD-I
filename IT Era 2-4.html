@@ -195,9 +195,24 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            perspective: 1000px;
         }
 
-        .question-card {
+        .flashcard-container {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .flashcard-container.flipped {
+            transform: rotateX(180deg);
+        }
+
+        .question-card, .answer-card {
             width: 100%;
             min-height: 150px;
             background-color: var(--card-bg);
@@ -210,10 +225,22 @@
             box-sizing: border-box;
             text-align: center;
             position: relative;
+            backface-visibility: hidden;
         }
+
+        .answer-card {
+            transform: rotateX(180deg);
+            position: absolute;
+            top: 0; left: 0;
+        }
+
         .question-card-text {
             font-size: 20px;
             font-weight: 600;
+        }
+
+         .answer-text {
+            font-size: 16px;
         }
         
         .quote {
@@ -225,12 +252,12 @@
         .quote-end { bottom: 12px; right: 16px; }
 
 
-        .answer-area {
+        .flip-prompt-area {
             margin-top: 24px;
             width: 100%;
         }
 
-        .answer-card {
+        .flip-prompt-card {
             width: 100%;
             min-height: 100px;
             border: 2px dashed var(--border-color);
@@ -242,8 +269,9 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            cursor: pointer;
         }
-        .answer-card p {
+        .flip-prompt-card p {
             margin: 0 0 12px 0;
             color: var(--subtle-text);
             font-weight: 500;
@@ -262,12 +290,6 @@
         }
         #flip-btn:hover {
             background-color: #fecaca;
-        }
-        
-        .answer-text {
-            display: none;
-            padding: 10px;
-            font-size: 16px;
         }
 
         .flashcard-nav {
@@ -349,22 +371,26 @@
             <div class="progress-bar"><div class="progress-bar-inner" id="progress-bar"></div></div>
             
             <div class="flashcard-area">
-                <div class="question-card">
-                    <div class="quote quote-start">“</div>
-                    <div id="question-text" class="question-card-text"></div>
-                    <div class="quote quote-end">”</div>
-                </div>
-                <div class="answer-area">
-                     <div class="answer-card" id="answer-card">
-                        <p id="answer-prompt">DEFINITION</p>
-                        <button id="flip-btn">Flip Card</button>
-                        <div id="answer-text" class="answer-text"></div>
+                 <div class="flashcard-container" id="flashcard-container">
+                    <div class="question-card">
+                        <div class="quote quote-start">“</div>
+                        <div id="question-text" class="question-card-text"></div>
+                        <div class="quote quote-end">”</div>
+                    </div>
+                    <div class="answer-card">
+                         <div id="answer-text" class="answer-text"></div>
                     </div>
                 </div>
-                <div class="flashcard-nav">
-                    <button class="nav-btn" id="prev-card">Previous</button>
-                    <button class="nav-btn" id="next-card">Next</button>
+                <div class="flip-prompt-area">
+                     <div class="flip-prompt-card" id="flip-prompt-card">
+                        <p>DEFINITION</p>
+                        <button id="flip-btn">Flip Card</button>
+                    </div>
                 </div>
+            </div>
+             <div class="flashcard-nav">
+                <button class="nav-btn" id="prev-card">Previous</button>
+                <button class="nav-btn" id="next-card">Next</button>
             </div>
         </div>
     </div>
@@ -448,14 +474,14 @@
         const answerText = document.getElementById('answer-text');
         const flipBtn = document.getElementById('flip-btn');
         const progressBar = document.getElementById('progress-bar');
-        const answerPrompt = document.getElementById('answer-prompt');
-        const answerCard = document.getElementById('answer-card');
+        const flipPromptCard = document.getElementById('flip-prompt-card');
         const prevBtn = document.getElementById('prev-card');
         const nextBtn = document.getElementById('next-card');
+        const flashcardContainer = document.getElementById('flashcard-container');
+
 
         let currentCategory = '';
         let currentCardIndex = 0;
-        let isFlipped = false;
 
         // Function to set up and display category counts
         function setupCategoryCounts() {
@@ -472,26 +498,31 @@
         function showCard(index) {
             const cards = flashcardData[currentCategory].cards;
             if (index >= 0 && index < cards.length) {
-                questionText.innerHTML = cards[index].q;
-                answerText.innerHTML = cards[index].a;
+                // Animate card out
+                flashcardContainer.style.transition = 'opacity 0.2s ease-out';
+                flashcardContainer.style.opacity = '0';
                 
-                // Reset flip state
-                isFlipped = false;
-                answerText.style.display = 'none';
-                flipBtn.style.display = 'block';
-                answerPrompt.style.display = 'block';
+                setTimeout(() => {
+                    questionText.innerHTML = cards[index].q;
+                    answerText.innerHTML = cards[index].a;
+                    
+                    // Reset flip state
+                    flashcardContainer.classList.remove('flipped');
+                    
+                    // Update progress bar
+                    const progress = ((index + 1) / cards.length) * 100;
+                    progressBar.style.width = `${progress}%`;
+                    
+                    // Animate card in
+                    flashcardContainer.style.opacity = '1';
 
-                // Update progress bar
-                const progress = ((index + 1) / cards.length) * 100;
-                progressBar.style.width = `${progress}%`;
+                }, 200);
+
             }
         }
         
         function handleFlip() {
-            isFlipped = true;
-            answerText.style.display = 'block';
-            flipBtn.style.display = 'none';
-            answerPrompt.style.display = 'none';
+             flashcardContainer.classList.toggle('flipped');
         }
         
         function navigateCards(direction) {
@@ -525,27 +556,27 @@
         });
 
         // Event listener for flipping the card
-        flipBtn.addEventListener('click', handleFlip);
-        answerCard.addEventListener('click', handleFlip); // Allow clicking anywhere on the card
+        flipPromptCard.addEventListener('click', handleFlip);
         
-        // Add swipe navigation
+        // Add swipe navigation for card content area
         let touchstartX = 0;
         let touchendX = 0;
+        const swipeArea = document.querySelector('.flashcard-area');
 
-        flashcardScreen.addEventListener('touchstart', e => {
+        swipeArea.addEventListener('touchstart', e => {
             touchstartX = e.changedTouches[0].screenX;
         }, { passive: true });
 
-        flashcardScreen.addEventListener('touchend', e => {
+        swipeArea.addEventListener('touchend', e => {
             touchendX = e.changedTouches[0].screenX;
             handleSwipe();
         });
         
         function handleSwipe() {
-            if (touchendX < touchstartX) { // Swiped left
+            if (touchendX < touchstartX - 50) { // Swiped left
                 navigateCards(1);
             }
-            if (touchendX > touchstartX) { // Swiped right
+            if (touchendX > touchstartX + 50) { // Swiped right
                 navigateCards(-1);
             }
         }
