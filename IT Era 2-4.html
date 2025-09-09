@@ -14,6 +14,7 @@
             --text-color: #1a1a1a;
             --subtle-text: #6b7280;
             --border-color: #e5e7eb;
+            --primary-color: #3b82f6;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --border-radius-lg: 24px;
             --border-radius-md: 16px;
@@ -185,7 +186,7 @@
         .progress-bar-inner {
             height: 100%;
             width: 0%;
-            background-color: #3b82f6;
+            background-color: var(--primary-color);
             transition: width 0.3s ease;
         }
 
@@ -193,28 +194,35 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            perspective: 1000px;
+        }
+        
+        .card-flipper {
+            flex-grow: 1;
+            width: 100%;
+            perspective: 1500px;
         }
 
         .flashcard-container {
             width: 100%;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            height: 100%;
+            position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .flashcard-container.flipped {
-            transform: rotateX(180deg);
+            transform: rotateY(180deg);
         }
 
-        .question-card, .answer-card {
+        .flashcard-face {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            min-height: 150px;
+            height: 100%;
+            backface-visibility: hidden;
             background-color: var(--card-bg);
             border-radius: var(--border-radius-md);
             box-shadow: var(--shadow);
@@ -224,25 +232,25 @@
             padding: 24px;
             box-sizing: border-box;
             text-align: center;
-            position: relative;
-            backface-visibility: hidden;
+            overflow-y: auto;
         }
-
-        .answer-card {
-            transform: rotateX(180deg);
-            position: absolute;
-            top: 0; left: 0;
+        
+        .back-face {
+            transform: rotateY(180deg);
+            /* Added the background color from the screen recording */
+            background-color: #eef2ff; 
         }
-
-        .question-card-text {
+        
+        #question-text {
             font-size: 20px;
             font-weight: 600;
         }
-
-         .answer-text {
-            font-size: 16px;
-        }
         
+        #answer-text {
+            font-size: 16px;
+            font-weight: 400;
+        }
+
         .quote {
             position: absolute;
             font-size: 32px;
@@ -251,9 +259,8 @@
         .quote-start { top: 12px; left: 16px; }
         .quote-end { bottom: 12px; right: 16px; }
 
-
         .flip-prompt-area {
-            margin-top: 24px;
+            margin: 24px 0 0 0;
             width: 100%;
         }
 
@@ -291,30 +298,34 @@
         #flip-btn:hover {
             background-color: #fecaca;
         }
-
-        .flashcard-nav {
-            display: flex;
-            justify-content: space-between;
+        
+        .bottom-nav {
             width: 100%;
-            margin-top: 24px;
+            display: flex;
+            justify-content: center;
+            padding: 16px 0 0 0;
         }
 
-        .nav-btn {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: var(--border-radius-sm);
+        #next-card-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
+            transition: transform 0.2s ease;
         }
-
-        .nav-btn:hover {
-            background-color: var(--bg-color);
-            border-color: #d1d5db;
+        #next-card-btn:hover {
+            transform: scale(1.1);
+        }
+        #next-card-btn svg {
+            width: 28px;
+            height: 28px;
         }
         
     </style>
@@ -371,26 +382,30 @@
             <div class="progress-bar"><div class="progress-bar-inner" id="progress-bar"></div></div>
             
             <div class="flashcard-area">
-                 <div class="flashcard-container" id="flashcard-container">
-                    <div class="question-card">
-                        <div class="quote quote-start">“</div>
-                        <div id="question-text" class="question-card-text"></div>
-                        <div class="quote quote-end">”</div>
-                    </div>
-                    <div class="answer-card">
-                         <div id="answer-text" class="answer-text"></div>
+                 <div class="card-flipper">
+                    <div class="flashcard-container" id="flashcard-container">
+                        <div class="flashcard-face front-face">
+                            <div class="quote quote-start">“</div>
+                            <div id="question-text"></div>
+                            <div class="quote quote-end">”</div>
+                        </div>
+                        <div class="flashcard-face back-face">
+                            <div id="answer-text"></div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="flip-prompt-area">
                      <div class="flip-prompt-card" id="flip-prompt-card">
-                        <p>DEFINITION</p>
+                        <p id="flip-prompt-text">DEFINITION</p>
                         <button id="flip-btn">Flip Card</button>
                     </div>
                 </div>
-            </div>
-             <div class="flashcard-nav">
-                <button class="nav-btn" id="prev-card">Previous</button>
-                <button class="nav-btn" id="next-card">Next</button>
+                <div class="bottom-nav">
+                    <button id="next-card-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -472,18 +487,16 @@
         const flashcardCategoryTitle = document.getElementById('flashcard-category-title');
         const questionText = document.getElementById('question-text');
         const answerText = document.getElementById('answer-text');
-        const flipBtn = document.getElementById('flip-btn');
         const progressBar = document.getElementById('progress-bar');
         const flipPromptCard = document.getElementById('flip-prompt-card');
-        const prevBtn = document.getElementById('prev-card');
-        const nextBtn = document.getElementById('next-card');
+        const flipPromptText = document.getElementById('flip-prompt-text');
+        const nextCardBtn = document.getElementById('next-card-btn');
         const flashcardContainer = document.getElementById('flashcard-container');
-
 
         let currentCategory = '';
         let currentCardIndex = 0;
+        let isFlipped = false;
 
-        // Function to set up and display category counts
         function setupCategoryCounts() {
             Object.keys(flashcardData).forEach(categoryKey => {
                 const countEl = document.getElementById(`count_${categoryKey}`);
@@ -494,35 +507,39 @@
             });
         }
         
-        // Function to show a card
         function showCard(index) {
             const cards = flashcardData[currentCategory].cards;
             if (index >= 0 && index < cards.length) {
-                // Animate card out
-                flashcardContainer.style.transition = 'opacity 0.2s ease-out';
-                flashcardContainer.style.opacity = '0';
-                
+                const mainCard = flashcardContainer.parentElement;
+                mainCard.style.transition = 'opacity 0.2s ease-out, transform 0.2s ease-out';
+                mainCard.style.opacity = '0';
+                mainCard.style.transform = 'translateY(10px)';
+
                 setTimeout(() => {
                     questionText.innerHTML = cards[index].q;
                     answerText.innerHTML = cards[index].a;
                     
-                    // Reset flip state
+                    isFlipped = false;
                     flashcardContainer.classList.remove('flipped');
+                    flipPromptText.textContent = 'DEFINITION';
                     
-                    // Update progress bar
                     const progress = ((index + 1) / cards.length) * 100;
                     progressBar.style.width = `${progress}%`;
                     
-                    // Animate card in
-                    flashcardContainer.style.opacity = '1';
-
+                    mainCard.style.opacity = '1';
+                    mainCard.style.transform = 'translateY(0)';
                 }, 200);
-
             }
         }
         
         function handleFlip() {
+             isFlipped = !isFlipped;
              flashcardContainer.classList.toggle('flipped');
+             if(isFlipped) {
+                flipPromptText.textContent = 'TERM';
+             } else {
+                flipPromptText.textContent = 'DEFINITION';
+             }
         }
         
         function navigateCards(direction) {
@@ -535,7 +552,6 @@
              }
         }
 
-        // Event Listeners for category selection
         categoryCards.forEach(card => {
             card.addEventListener('click', () => {
                 currentCategory = card.dataset.category;
@@ -549,43 +565,15 @@
             });
         });
 
-        // Event listener for back button
         backBtn.addEventListener('click', () => {
             flashcardScreen.style.display = 'none';
             categoryScreen.style.display = 'block';
         });
 
-        // Event listener for flipping the card
         flipPromptCard.addEventListener('click', handleFlip);
         
-        // Add swipe navigation for card content area
-        let touchstartX = 0;
-        let touchendX = 0;
-        const swipeArea = document.querySelector('.flashcard-area');
-
-        swipeArea.addEventListener('touchstart', e => {
-            touchstartX = e.changedTouches[0].screenX;
-        }, { passive: true });
-
-        swipeArea.addEventListener('touchend', e => {
-            touchendX = e.changedTouches[0].screenX;
-            handleSwipe();
-        });
+        nextCardBtn.addEventListener('click', () => navigateCards(1));
         
-        function handleSwipe() {
-            if (touchendX < touchstartX - 50) { // Swiped left
-                navigateCards(1);
-            }
-            if (touchendX > touchstartX + 50) { // Swiped right
-                navigateCards(-1);
-            }
-        }
-        
-        // Event Listeners for Nav Buttons
-        prevBtn.addEventListener('click', () => navigateCards(-1));
-        nextBtn.addEventListener('click', () => navigateCards(1));
-
-        // Initial setup
         document.addEventListener('DOMContentLoaded', () => {
             setupCategoryCounts();
         });
@@ -593,4 +581,5 @@
     </script>
 </body>
 </html>
+
 
